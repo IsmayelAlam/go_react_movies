@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Button } from '../ui/button';
+import { buttonVariants } from '../ui/button';
 
 export function TopBar() {
   return (
@@ -7,9 +7,12 @@ export function TopBar() {
       <Link className="text-2xl font-bold" href={'/'}>
         Movies
       </Link>
-      <Button variant="outline" className="mr-2">
+      <Link
+        className={buttonVariants({ variant: 'outline' })}
+        href={'/sign-in'}
+      >
         Sign In
-      </Button>
+      </Link>
     </header>
   );
 }

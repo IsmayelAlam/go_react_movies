@@ -24,17 +24,31 @@ const pageLinks = [
   {
     name: 'Home',
     href: '/',
+    signed: false,
   },
   {
     name: 'Movies',
     href: '/movies',
+    signed: false,
   },
   {
-    name: 'TV Shows',
-    href: '/tv-shows',
+    name: 'Genres',
+    href: '/genres',
+    signed: false,
   },
   {
-    name: 'Watchlist',
-    href: '/watchlist',
+    name: 'Add Movie',
+    href: '/add-movie',
+    signed: true,
+  },
+  {
+    name: 'Manage Catalogs',
+    href: '/manage-catalogs',
+    signed: true,
+  },
+  {
+    name: 'GraphQL',
+    href: '/graphql',
+    signed: true,
   },
 ];
