@@ -27,16 +27,12 @@ func (app *application) AllMovies(w http.ResponseWriter, r *http.Request) {
 	movies, err := app.DB.AddMovies()
 
 	if err != nil {
-		log.Println("Error fetching movies:", err)
+		app.errorJson(w, err)
 		return
 	}
 
-	output, err := json.Marshal(movies)
-	if err != nil {
+	if err = app.writeJson(w, http.StatusOK, movies); err != nil {
 		log.Fatal(err)
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	w.Write(output)
 }
