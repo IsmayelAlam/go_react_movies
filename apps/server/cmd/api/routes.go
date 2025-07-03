@@ -14,7 +14,7 @@ func (app *application) routes() http.Handler {
 	mux.Use(app.enableCORS)
 
 	mux.Get("/", app.Home)
-	mux.Get("/auth", app.Authenticate)
+	mux.Post("/login", app.Authenticate)
 	mux.Get("/movies", app.AllMovies)
 
 	return mux

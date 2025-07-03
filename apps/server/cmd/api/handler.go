@@ -55,10 +55,15 @@ func (app *application) Authenticate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if valid, err := user.PasswordMatch(requestPayload.Password); err != nil || !valid {
+		app.errorJson(w, errors.New("invalid credentials"), http.StatusBadRequest)
+		return
+	}
+
 	u := jwtUser{
-		ID:        1,
-		FirstName: "John",
-		LastName:  "Doe",
+		ID:        user.ID,
+		FirstName: user.FirstName,
+		LastName:  user.LastName,
 	}
 
 	tokenPair, err := app.Auth.GenerateToken(&u)
@@ -71,7 +76,7 @@ func (app *application) Authenticate(w http.ResponseWriter, r *http.Request) {
 
 	http.SetCookie(w, refreshCookie)
 
-	if err = app.writeJson(w, http.StatusOK, tokenPair.Token); err != nil {
+	if err = app.writeJson(w, http.StatusAccepted, tokenPair); err != nil {
 		log.Fatal(err)
 	}
 }
