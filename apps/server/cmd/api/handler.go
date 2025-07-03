@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"log"
 	"net/http"
 )
@@ -38,13 +39,29 @@ func (app *application) AllMovies(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) Authenticate(w http.ResponseWriter, r *http.Request) {
-	user := jwtUser{
+	var requestPayload struct {
+		Email    string `json:"email"`
+		Password string `json:"password"`
+	}
+
+	if err := app.readJson(w, r, &requestPayload); err != nil {
+		app.errorJson(w, err)
+		return
+	}
+
+	user, err := app.DB.GetUserByEmail(requestPayload.Email)
+	if err != nil {
+		app.errorJson(w, errors.New("invalid credentials"), http.StatusBadRequest)
+		return
+	}
+
+	u := jwtUser{
 		ID:        1,
 		FirstName: "John",
 		LastName:  "Doe",
 	}
 
-	tokenPair, err := app.Auth.GenerateToken(&user)
+	tokenPair, err := app.Auth.GenerateToken(&u)
 	if err != nil {
 		app.errorJson(w, err)
 		return
