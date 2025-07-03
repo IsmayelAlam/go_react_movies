@@ -36,3 +36,25 @@ func (app *application) AllMovies(w http.ResponseWriter, r *http.Request) {
 	}
 
 }
+
+func (app *application) Authenticate(w http.ResponseWriter, r *http.Request) {
+	user := jwtUser{
+		ID:        1,
+		FirstName: "John",
+		LastName:  "Doe",
+	}
+
+	tokenPair, err := app.Auth.GenerateToken(&user)
+	if err != nil {
+		app.errorJson(w, err)
+		return
+	}
+
+	refreshCookie := app.Auth.GetRefreshCookie(tokenPair.RefreshToken)
+
+	http.SetCookie(w, refreshCookie)
+
+	if err = app.writeJson(w, http.StatusOK, tokenPair.Token); err != nil {
+		log.Fatal(err)
+	}
+}
